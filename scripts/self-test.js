@@ -77,6 +77,22 @@
         '<i style="display:inline-block;width:14px;height:14px;background:#f4f9f6"></i>'.repeat(4)}</div>`,
     },
     {
+      nome: 'hover swaps the background and leaves the foreground',
+      espera: ['contrast-in-state'],
+      html: `<style>#chartProbeFixture tr:hover td { background: #e9edee }</style>
+        <p>2026-09-10</p><table><thead><tr><th>a</th><th>b</th></tr></thead><tbody>
+        ${'<tr><td>row</td><td style="background:#9c3f36;color:#fff;text-align:right">7</td></tr>'.repeat(4)}
+        </tbody></table>`,
+    },
+    {
+      nome: 'hover leaves the cell that carries its own fill alone',
+      proibe: ['contrast-in-state'],
+      html: `<style>#chartProbeFixture tr:hover td:not(.status) { background: #e9edee }</style>
+        <p>2026-09-10</p><table><thead><tr><th>a</th><th>b</th></tr></thead><tbody>
+        ${'<tr><td>row</td><td class="status" style="background:#9c3f36;color:#fff;text-align:right">7</td></tr>'.repeat(4)}
+        </tbody></table>`,
+    },
+    {
       nome: 'legend swatches sit beside their own labels',
       proibe: ['no-text-equivalent-html'],
       html: `<p>2026-09-10</p><div style="background:#fff">${

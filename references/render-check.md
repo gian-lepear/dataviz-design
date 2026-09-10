@@ -14,6 +14,7 @@ Reading the chart code proves intent, never result. These rules are all stated i
 | §9 mobile | reflow at 390px is a layout outcome; "it's responsive" is not an observation |
 | §3 no dead ends | whether a click re-filters or opens a drill is behavior, only observable by clicking |
 | §7 empty series | the empty state only appears with data that empties it |
+| §5 / §10 contrast under interaction | the resting page is the only state a probe sees; `contrast-in-state` reads the rules instead, which covers a declared state and not one built in JavaScript |
 | §10 freshness stamp | present in the template ≠ rendered with a real date |
 
 A chart that was never rendered has not been reviewed. Say so plainly rather than implying verification you did not run.
@@ -83,6 +84,7 @@ What it decides:
 | `table-row-height` | warn | `tables.md` (Few 2004) — rows under 1.6x the text size, where adjacent rows fuse |
 | `number-without-baseline` | warn | §6 — a hero number (≥24px) with no baseline in its own tile nor in the sibling tiles that share its shape. A trio of today/after/difference counts as the comparison; an unrelated number elsewhere on the page does not |
 | `no-as-of-date` | warn | §10 — a surface carrying numbers with no as-of date anywhere in it: a number with no reference date is neither trustworthy nor auditable |
+| `contrast-in-state` | error | WCAG 1.4.3 in a `:hover`/`:focus`/`:active` state. A probe reads the page at rest, so a rule that swaps the background and leaves the foreground is invisible to every contrast check above. Read from the CSSOM, resolved against a real element so `var()` means what it means in that subtree, and sampled one element per distinct colour/background pair — the first N matches miss the status cell, which is the one whose foreground was picked for its own fill |
 | `not-checked-here` | info | emitted on **every** run, including clean ones: names the half this probe cannot decide (§11 form, §12 encoding, §14 message, §4 consistency) so "no findings" is never read as "reviewed" |
 
 The digest is a summary. Drill into one check with `__chartReport.findings[N].samples`; the full report stays in `globalThis.__chartReport`.

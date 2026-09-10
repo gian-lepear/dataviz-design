@@ -56,6 +56,11 @@ O probe decide rolagem horizontal, texto cortado, colisão de rótulo, contraste
 cinco regras de tabela que o DOM decide, e desde esta rodada `number-without-baseline` (§6) e
 `no-as-of-date` (§10). São 22 checagens.
 
+Acrescentado depois, a partir de um bug relatado pelo leitor: `contrast-in-state`, que lê as regras
+de `:hover`, `:focus` e `:active` no CSSOM. A célula de status carrega o texto na cor do próprio
+preenchimento, e uma regra de hover que trocava só o fundo derrubava o contraste de 6,3 para 1,1 nos
+dois temas. Nenhuma checagem via, porque todas mediam a página em repouso.
+
 **Conscientemente fora de alcance**, para não ficarem como pendência que nunca fecha:
 
 - `jargão sem explicação` (§10): a heurística seria sigla em caixa alta sem `abbr` ou `title`. Em
@@ -65,6 +70,8 @@ cinco regras de tabela que o DOM decide, e desde esta rodada `number-without-bas
   analítica, onde é defeito. O probe não tem como saber qual é. O §0.3 pede essa classificação ao
   humano, e é lá que a checagem deveria morar, não no script.
 - `filtro sem feedback` (§1): exige interação, fora do alcance de um probe estático.
+- estado construído em JavaScript: o `contrast-in-state` cobre estado **declarado** em CSS. Cor
+  aplicada por script, em resposta a evento, continua invisível para o probe.
 
 Enquanto isso, a execução emite `not-checked-here` em toda rodada, listando o que continua sendo
 julgamento humano. Isso existe porque uma execução limpa foi confundida com revisão feita.

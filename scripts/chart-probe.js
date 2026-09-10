@@ -410,6 +410,62 @@
         'nor auditable (SKILL.md section 10)');
     }
 
+    // 12. WCAG 1.4.3 in the interaction states. A probe reads the page at rest, so a :hover or
+    // :focus rule that swaps the background without swapping the foreground is invisible to every
+    // check above. Read from the CSSOM and resolved against a real element, so var() means what it
+    // means in that subtree.
+    const hoverRuim = [];
+    const resolver = (decl, prop, ondeFica) => {
+      const alvo = D.createElement('span');
+      alvo.style.cssText = prop + ':' + decl + ';position:absolute;left:-9999px';
+      ondeFica.appendChild(alvo);
+      const v = rgba(cs(alvo)[prop === 'background' ? 'backgroundColor' : prop]);
+      alvo.remove();
+      return v;
+    };
+    for (const folha of [...D.styleSheets]) {
+      let regras;
+      try { regras = folha.cssRules; } catch { continue; }   // cross-origin sheet
+      for (const regra of regras || []) {
+        const sel = regra.selectorText;
+        if (!sel || !/:(hover|focus|focus-visible|active)\b/.test(sel)) continue;
+        const fundoDecl = regra.style.getPropertyValue('background') ||
+                          regra.style.getPropertyValue('background-color');
+        const corDecl = regra.style.getPropertyValue('color');
+        if (!fundoDecl && !corDecl) continue;
+        const base = sel.replace(/:(hover|focus|focus-visible|active)\b/g, '');
+        let alvos;
+        try {
+          // One representative per distinct colour/background pair: sampling the first N misses the
+          // status cell, which is exactly the one whose foreground was picked for its own fill.
+          const porPar = new Map();
+          for (const el of root.querySelectorAll(base)) {
+            if (!visible(el) || !el.textContent.trim()) continue;
+            const st = cs(el);
+            const chave = st.color + '|' + st.backgroundColor;
+            if (!porPar.has(chave)) porPar.set(chave, el);
+            if (porPar.size > 12) break;
+          }
+          alvos = [...porPar.values()];
+        } catch { continue; }
+        for (const el of alvos) {
+          if (!el.textContent.trim()) continue;
+          const pai = el.parentElement || D.body;
+          const fundo = fundoDecl ? resolver(fundoDecl, 'background', pai) : rgba(hex(bgOf(el)));
+          const cor = corDecl ? resolver(corDecl, 'color', pai) : rgba(cs(el).color);
+          if (!fundo || !cor) continue;
+          const piso = (parseFloat(cs(el).fontSize) || 16) >= 24 ? 3 : 4.5;
+          const c = contrast(over(cor, over(fundo, bgOf(pai))), over(fundo, bgOf(pai)));
+          if (c < piso) hoverRuim.push(sel + ' on ' + path(el) + ' = ' + c.toFixed(2) +
+            ':1 (needs ' + piso + '); the state changes one channel and not the other');
+        }
+      }
+    }
+    if (hoverRuim.length) add('contrast-in-state', 'error',
+      `${hoverRuim.length} element(s) below WCAG 1.4.3 in a hover/focus/active state: the rule swaps ` +
+      `background or colour and leaves the other, so the text disappears while the pointer is on it`,
+      [...new Set(hoverRuim)]);
+
     // A clean run is not a review. State the half this probe cannot decide, so "no findings"
     // is never mistaken for "the chart was reviewed" (SKILL.md sections 11-15).
     add('not-checked-here', 'info',
