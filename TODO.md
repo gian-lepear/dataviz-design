@@ -53,8 +53,8 @@ há escala; célula com cor e sem valor.
 
 O probe decide rolagem horizontal, texto cortado, colisão de rótulo, contraste de texto e de marca
 (SVG, HTML, borda e box-shadow), equivalente textual, esquema de cor, piso de tamanho na marca, as
-cinco regras de tabela que o DOM decide, e desde esta rodada `numero-sem-comparacao` (§6) e
-`sem-carimbo-de-data` (§10). São 22 checagens.
+cinco regras de tabela que o DOM decide, e desde esta rodada `number-without-baseline` (§6) e
+`no-as-of-date` (§10). São 22 checagens.
 
 **Conscientemente fora de alcance**, para não ficarem como pendência que nunca fecha:
 
@@ -66,7 +66,7 @@ cinco regras de tabela que o DOM decide, e desde esta rodada `numero-sem-compara
   humano, e é lá que a checagem deveria morar, não no script.
 - `filtro sem feedback` (§1): exige interação, fora do alcance de um probe estático.
 
-Enquanto isso, a execução emite `nao-verificado-aqui` em toda rodada, listando o que continua sendo
+Enquanto isso, a execução emite `not-checked-here` em toda rodada, listando o que continua sendo
 julgamento humano. Isso existe porque uma execução limpa foi confundida com revisão feita.
 
 ## 3. ~~`references/render-check.md`: a tabela de checagens está desatualizada~~ FEITO
@@ -75,15 +75,30 @@ A tabela "What it decides" documentava oito checagens contra vinte no código. S
 estão documentadas, com a regra e a fonte de cada uma, e a frase de abertura da seção deixou de
 prometer só SVG. Conferido nos dois sentidos, sem divergência.
 
-Para não voltar a divergir, vale um teste que compare os nomes em `add('...')` do script com os da
-tabela do doc e falhe se um lado tiver o que o outro não tem. É o mesmo cruzamento que fiz à mão.
+Cruzamento automatizado em `scripts/check-docs-sync.js`, que falha se um lado tiver o que o outro não
+tem. E `scripts/self-test.js` cobre o probe com 13 casos, cada um um bug que ele já teve; verificado
+que a suíte falha quando o bug é reintroduzido, senão seria decoração.
 
 ## 4. SKILL.md: o §11 é pulável na prática
 
 O fluxo de revisão tem uma metade mecânica com saída objetiva (o probe) e uma metade de julgamento
 (§11 a §15). Na prática a primeira sequestra a atenção e a segunda é pulada, porque uma devolve
-`LIMPO` e a outra exige ler `chart-choice.md`.
+`LIMPO` e a outra exige ler `chart-choice.md`. Foi assim que uma barra empilhada passou por revisão
+com a mensagem no segmento que flutua, e quem pegou foi o leitor, não a skill.
 
-Ideia: inverter a ordem na seção Usage, exigindo o §11 **antes** do render check, com uma frase
-única obrigatória no formato "a relação é X, logo a forma é Y", escrita antes de qualquer medição.
-Assim a escolha da forma fica registrada e revisável, em vez de implícita.
+Ideia: exigir o §11 **antes** do render check, com uma frase única obrigatória no formato "a relação
+é X, logo a forma é Y", escrita antes de qualquer medição. Assim a escolha da forma fica registrada e
+revisável, em vez de implícita.
+
+Mitigação já no lugar: `not-checked-here` aparece em toda execução, inclusive nas limpas, nomeando o
+que o probe não decide. Não substitui a mudança de ordem, só impede que o silêncio pareça aprovação.
+
+## 5. §3 contra §0.3: resolvido, o §3 vale
+
+Levantado que o §0.3 classifica a tela em reporting, monitoring, exploring ou functional, e que o §3
+("no dead ends") é regra dura sem isentar reporting, o que parecia tensão: num relatório linear, não
+clicar seria correto.
+
+**Decisão: o §3 é a regra, superfície de dado tem que ser interativa.** Sem isenção por tipo de tela.
+Consequência prática: relatório com grade de pontos e matriz que não levam a lugar nenhum está em
+débito com o §3, e o caminho é dar drill, não relaxar a regra.

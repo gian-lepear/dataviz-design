@@ -393,7 +393,7 @@
       if (!temNumero && !temPalavra)
         semBase.push(path(el) + ' "' + txt.slice(0, 16) + '" has no baseline in its tile or group');
     }
-    if (semBase.length) add('numero-sem-comparacao', 'warn',
+    if (semBase.length) add('number-without-baseline', 'warn',
       `${semBase.length} hero number(s) with no baseline nearby: no previous period, target or benchmark ` +
       `(SKILL.md section 6). A number with no comparison is noise`, semBase);
 
@@ -405,14 +405,14 @@
       const meses = 'janeiro|fevereiro|mar\u00e7o|abril|maio|junho|julho|agosto|setembro|outubro|novembro|dezembro' +
         '|january|february|march|april|may|june|july|august|september|october|november|december';
       const temData = new RegExp('\\d{4}-\\d{2}-\\d{2}|\\d{1,2}/\\d{1,2}/\\d{2,4}|(' + meses + ')', 'i').test(txtPagina);
-      if (!temData) add('sem-carimbo-de-data', 'warn',
+      if (!temData) add('no-as-of-date', 'warn',
         'no as-of date anywhere on the surface: a number with no reference date is neither trustworthy ' +
         'nor auditable (SKILL.md section 10)');
     }
 
     // A clean run is not a review. State the half this probe cannot decide, so "no findings"
     // is never mistaken for "the chart was reviewed" (SKILL.md sections 11-15).
-    add('nao-verificado-aqui', 'info',
+    add('not-checked-here', 'info',
       'this probe answers the mechanical half only. Still open, and only decidable by judgement: ' +
       'section 11 form choice (does the chart type match the relationship in the data?), section 12 encoding ' +
       '(is the message on the most precise channel available?), section 14 message (is the title the ' +

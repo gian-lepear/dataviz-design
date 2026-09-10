@@ -64,6 +64,40 @@ annotations:
   - { series: "Plant 4", at: "May", text: "above the ceiling" }
 ```
 
+## Stacked bar where the message is the floating segment
+
+**Bad:** a stacked horizontal bar of monthly cloud spend per service, each bar the full current cost split into "still paid" and "saved by migrating", ordered by current cost. The headline claims two services account for half the saving — and the saving is exactly the segment that does not touch the baseline. Only the base segment and the total read precisely; the middle floats, so comparing the saving across rows is the hardest judgement the chart offers. Breaks §12 (position on a common scale beats length on a shifting one) and the stacked-bar rule in references/tables.md (put the important category against the baseline; the middle ones float — Wilke 2019, Few 2012).
+
+**Good:** a dumbbell. One dot for today, one for after, connected; both sit on the same horizontal scale, so both absolute levels read by position, the most precise channel available, and the segment between them is the change. Order rows by current cost, colour only the "after" dot, and carry the difference in a labelled column at the right. Where a row does not change, draw a single dot and say so — an empty connector is a value, not a gap. Prefer the dumbbell over a slope whenever the LEVEL matters alongside the change (Muth; Cleveland & McGill 1984).
+
+```
+form: dumbbell
+scale: { min: 0, max: 440, unit: "USD/month" }      # one common scale for every row
+rows:  sorted by value.today desc
+marks:
+  - dot: value.today   colour: neutral
+  - dot: value.after   colour: accent
+  - connector: today → after, colour: accent at 35%
+label_column: { value: today - after, header: "saves", align: right }
+unchanged_row: single dot, label "no change"
+```
+
+## Matrix left in alphabetical order
+
+**Bad:** a 63-row by 4-column result matrix, one row per endpoint, each cell a pass count out of 10 over a colour fill, rows in alphabetical order. Every cell is painted, so the field saturates and nothing stands out; the nine rows that actually fail are scattered from top to bottom and the reader has to reconstruct the pattern by hand. Breaks §14 (everything coloured = nothing highlighted) and Bertin's reorderable matrix: the analytical act in a matrix is permutation, and alphabetical order destroys it.
+
+**Good:** group the rows by behaviour and give each block a header naming it ("blocks in the US", "identical on both sides"). The failures collapse into one contiguous block that is visible before anything is read. Then drop the colour from the conforming cells — neutral fill, muted figure — and keep the strong colour for the exception only. The number stays in every cell, which is the redundant channel that colour alone would not provide. This is a status matrix, not a heatmap: the cell carries a nominal state, so use the status palette, not a sequential ramp, and give it a key rather than a min/max legend (see references/tables.md, "The status matrix").
+
+```
+form: status matrix
+row_order: group by pattern, never alphabetical   # Bertin, reorderable matrix
+group_header: names the pattern, one per block
+cell: { value: printed always, fill: status palette }
+fill_policy: conforming → neutral, exception → strong
+legend: key mapping colour → meaning (not min/max)
+align: centred — a grid of 1-2 digit codes is a mark grid, not a column of magnitudes
+```
+
 ## A number with no baseline (raw KPI)
 
 **Bad:** a giant card showing only "$128.4K" of recurring revenue. Is it going up or down? Good or bad? The number alone decides nothing. Breaks §6 (a number with no baseline is noise — every KPI gets a delta against prior period, target, or benchmark) and the trend rule (if the question is change over time, add a sparkline).

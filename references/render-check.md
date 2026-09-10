@@ -38,6 +38,18 @@ The extension needs a site permission for the origin you are about to open; if a
 
 `scripts/chart-probe.js` runs the mechanical half of the checklist in one call and returns a digest that fits the tool channel (which truncates around 1 KB). It covers charts drawn in `<svg>` **and** charts drawn in HTML/CSS, plus the table rules that a rendered DOM can decide.
 
+Two scripts sit beside it. `scripts/self-test.js` is the probe's own regression suite — thirteen
+fixtures, each one a bug the probe once had, asserting which checks must fire and which must not:
+
+```js
+await import('http://127.0.0.1:8791/chart-probe.js');
+await import('http://127.0.0.1:8791/self-test.js');
+await chartProbeSelfTest()
+```
+
+`node scripts/check-docs-sync.js` compares the checks the probe emits with the table below and fails
+on drift. Run both after touching the probe.
+
 Serve it next to the page, then:
 
 ```js
@@ -69,9 +81,9 @@ What it decides:
 | `table-decimal-mixed` | warn | `tables.md` (Wilke 2019) — a column mixing decimal precision, which shifts the decimal point down the column |
 | `table-vertical-rules` | warn | `tables.md` (Wilke 2019; Rutter 2017) — vertical rules between columns; alignment already separates them |
 | `table-row-height` | warn | `tables.md` (Few 2004) — rows under 1.6x the text size, where adjacent rows fuse |
-| `numero-sem-comparacao` | warn | §6 — a hero number (≥24px) with no baseline in its own tile nor in the sibling tiles that share its shape. A trio of today/after/difference counts as the comparison; an unrelated number elsewhere on the page does not |
-| `sem-carimbo-de-data` | warn | §10 — a surface carrying numbers with no as-of date anywhere in it: a number with no reference date is neither trustworthy nor auditable |
-| `nao-verificado-aqui` | info | emitted on **every** run, including clean ones: names the half this probe cannot decide (§11 form, §12 encoding, §14 message, §4 consistency) so "no findings" is never read as "reviewed" |
+| `number-without-baseline` | warn | §6 — a hero number (≥24px) with no baseline in its own tile nor in the sibling tiles that share its shape. A trio of today/after/difference counts as the comparison; an unrelated number elsewhere on the page does not |
+| `no-as-of-date` | warn | §10 — a surface carrying numbers with no as-of date anywhere in it: a number with no reference date is neither trustworthy nor auditable |
+| `not-checked-here` | info | emitted on **every** run, including clean ones: names the half this probe cannot decide (§11 form, §12 encoding, §14 message, §4 consistency) so "no findings" is never read as "reviewed" |
 
 The digest is a summary. Drill into one check with `__chartReport.findings[N].samples`; the full report stays in `globalThis.__chartReport`.
 
