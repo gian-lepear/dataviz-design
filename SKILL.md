@@ -1,6 +1,6 @@
 ---
 name: dataviz-design
-description: "Use for ANY dashboard, chart, data table, KPI, map/heatmap, report, or analytics screen work — designing a new screen, reviewing an existing one, choosing a chart type, deciding interaction/drill, telling a story with data, reporting/scorecard, monitoring/alerting, data email/notification. Dataviz UX (anatomy, drill, cross-filtering, no dead ends) + chart design (choice by relationship/FT, Cleveland-McGill perception, data-ink/Tufte, storytelling/Knaflic, integrity/Cairo) + deep matrix in references/ (17 topics + worked examples)."
+description: "Use for ANY dashboard, chart, data table, KPI, map/heatmap, report, or analytics screen work — designing a new screen, reviewing an existing one, choosing a chart type, deciding interaction/drill, telling a story with data, reporting/scorecard, monitoring/alerting, data email/notification. Dataviz UX (anatomy, drill, cross-filtering, no dead ends) + chart design (choice by relationship/FT, Cleveland-McGill perception, data-ink/Tufte, storytelling/Knaflic, integrity/Cairo) + deep matrix in references/ (18 topics + worked examples)."
 ---
 
 # /dataviz-design
@@ -9,7 +9,7 @@ Design patterns for any data surface (dashboard, chart, table, KPI, map).
 Complements the `frontend-design` skill (visual identity) — this one covers the BEHAVIOR of the data.
 Structure: §0-10 = surface UX (anatomy, drill, interaction); §11-15 = the chart itself
 (choice, perception, noise, narrative, honesty); §16 = index of the deep matrix in
-`references/` (18 files) — this file is the checklist; thresholds, canonical sources, and
+`references/` (19 files) — this file is the checklist; thresholds, canonical sources, and
 debates live in the `references/` files, each rule citing its source.
 
 ## 0. Before you design (required questions)
@@ -136,6 +136,10 @@ A tooltip does NOT count as an answer.
 - [ ] **Dual axis** — manufactures correlation (§15); two panels or base 100.
 - [ ] **Everything colored** — with no context gray there's no highlight (§14).
 - [ ] **Title that only names the variable** — where the data is static, the title is the conclusion (§14).
+- [ ] **Never rendered** — the boxes above were reasoned about, not observed. Where the chart runs
+  (artifact, dev server, HTML file), verify it in a browser before calling it done: **references/render-check.md**
+  turns §3, §5, §7, §9 and this list into probes, and `scripts/chart-probe.js` answers the mechanical
+  half in one call.
 
 ## 11. Chart choice by RELATIONSHIP (FT Visual Vocabulary)
 
@@ -236,10 +240,11 @@ notations, and debates live there.
 | `references/accessibility-mobile.md` | WCAG in a chart; alt text; keyboard/screen reader; mobile/touch; SVG vs canvas by volume |
 | `references/dashboard-design-process.md` | starting a screen from scratch; brief/requirements (Kirk's 4 stages, Fry's pipeline, Munzner's levels); validating with real data; standardizing across screens |
 | `references/dataviz-research.md` | interviewing/testing with a dashboard user; personas/literacy; telemetry and A/B of data surfaces |
+| `references/render-check.md` | the chart RUNS somewhere (artifact, dev server, HTML file) and you are about to call it done, accessible, or responsive; verifying labels/contrast/reflow/dead ends in a real browser instead of asserting them |
 | `references/performance-latency-states.md` | slow dashboard; spinner/skeleton/empty; downsampling/pre-aggregation; budgeting filter/brush/drill latency |
 | `references/dataviz-email-notification.md` | email digest/report; Slack/push alert; server-side chart (PNG); notification deep-link; white-label embed |
 
-Beyond the 17 thematic files, `references/examples.md` gathers **worked examples** (before→after, cases
+Beyond the 18 thematic files, `references/examples.md` gathers **worked examples** (before→after, cases
 solved end to end) — read it when you want to see the principles applied together in a concrete case.
 
 ## Usage
@@ -249,5 +254,6 @@ rule); when designing/reviewing a specific CHART, also go through 11→15
 (11 chooses the form, 12 validates the encoding, 13 cleans up, 14 gives the message, 15 audits the
 honesty). When the work goes deep on a topic, **read the matrix file (§16)** before
 deciding — that's where the thresholds and trade-offs are. In review, list violations with file:line
-and the fix. Combine with `frontend-design` for visual identity and, when the project has one,
+and the fix. When the surface runs somewhere, close with the render check (§16, `render-check.md`) instead of
+asserting the result: a chart that was never rendered has not been reviewed, and saying so is part of the review. Combine with `frontend-design` for visual identity and, when the project has one,
 with the product's own theme/component macros.
