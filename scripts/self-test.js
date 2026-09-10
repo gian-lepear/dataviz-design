@@ -117,6 +117,14 @@
         '<i style="display:inline-block;width:12px;height:12px;background:#9c3f36"></i>'.repeat(2)}</div>`,
     },
     {
+      nome: 'mark that prints its own value is exempt from the 3:1 fill rule',
+      proibe: ['contrast-mark-html'],
+      espera: [],
+      html: `<p>2026-09-10</p><table><thead><tr><th>a</th><th>b</th></tr></thead><tbody>
+        ${'<tr><td>row</td><td style="background:#a32b21;color:#fff;text-align:right">0</td></tr>'.repeat(4)}
+        </tbody></table>`,
+    },
+    {
       nome: 'legend swatches sit beside their own labels',
       proibe: ['no-text-equivalent-html'],
       html: `<p>2026-09-10</p><div style="background:#fff">${

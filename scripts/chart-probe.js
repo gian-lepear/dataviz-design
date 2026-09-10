@@ -231,6 +231,10 @@
     if (htmlMarks.length) {
       const low = [];
       for (const m of htmlMarks) {
+        // WCAG 1.4.11 exempts a graphical object whose information is also available in text.
+        // A cell that prints its own value is that case: its fill needs no 3:1, and the printed
+        // figure is checked by contrast-text-html instead.
+        if (m.textContent.trim()) continue;
         const st = cs(m);
         const bg = m.parentElement ? bgOf(m.parentElement) : [255, 255, 255];
         // A CSS mark can carry its contrast in the fill OR in a visible border; take the stronger.
@@ -250,7 +254,7 @@
         }
       }
       if (low.length) add('contrast-mark-html', 'warn',
-        `${low.length} HTML/CSS mark(s) below 3:1 against their own ground (WCAG 1.4.11; exempt if directly labelled)`, low);
+        `${low.length} unlabelled HTML/CSS mark(s) below 3:1 against their own ground (WCAG 1.4.11; a mark that prints its own value is exempt and is checked as text instead)`, low);
 
       const semTexto = htmlGroups.filter((g) => {
         if (g.els[0].closest('figure,table,[role],[aria-label],[aria-labelledby]')) return false;

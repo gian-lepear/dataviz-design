@@ -73,7 +73,7 @@ What it decides:
 | `scheme-ignored` | warn | the reader asked for dark or light and the page paints the other, with no `[data-theme]` in play |
 | `canvas-opaque-to-probe` | info | a `<canvas>` chart is pixels; none of the above was measured for it |
 | `contrast-text-html` | error | WCAG 1.4.3 for text written in HTML, not inside `<svg>`: a cell value, an axis label or a legend written as an element was never covered by `contrast-text` |
-| `contrast-mark-html` | warn | WCAG 1.4.11 for marks drawn in HTML/CSS (a `div` bar, a dot grid, a heat-map cell). Fill, `border` and `box-shadow` all count, whichever gives the strongest contrast |
+| `contrast-mark-html` | warn | WCAG 1.4.11 for **unlabelled** marks drawn in HTML/CSS (a `div` bar, a dot grid, an empty cell). Fill, `border` and `box-shadow` all count, whichever gives the strongest contrast. A mark that prints its own value is exempt — the information is in text, so `contrast-text-html` governs it instead |
 | `no-text-equivalent-html` | warn | §10, Chartability — an HTML/CSS chart group with no `figure`/`table`/`role`/`aria-label` wrapper. A mark that sits beside its own label (a legend) is exempt |
 | `mark-size-floored` | error | §15, lie factor — a mark rendered exactly at its `min-width`/`min-height`: the floor is clamping the encoding, so two different values draw the same length. Usually only binds at the narrow end, which is why it is a render-time check |
 | `html-chart-only` | info | the surface draws its charts in HTML/CSS, so the svg-only checks (`tick-collision`, `color-only-series`, svg text contrast) did not run |
