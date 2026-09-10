@@ -94,6 +94,42 @@ Embedding a chart in the cell turns the table from a lookup device (read one val
 
 **Anti-patterns:** A heatmap with no numbers and no scale legend (decorative stained glass); one auto-scaled gradient per column inviting invalid horizontal comparison; an inline bar starting at a value ≠ 0 to "amplify differences"; a sparkline with an axis, gridlines, and dots at every value; sparklines with independent y-ranges presented as a volume comparison; an inline bar in 6 of the 8 columns.
 
+## The status matrix: nominal state, not a gradient
+
+The heatmap above encodes a **quantity** on a ramp. A different table shares its shape and inverts its
+semantics: dozens of rows by a handful of columns where the cell carries a **nominal state** — passed /
+partial / blocked, supported / unsupported, covered / uncovered. Browser-support tables, conformance
+matrices, test-coverage grids and result matrices all belong here. The gradient rules do not transfer,
+and one of them inverts: putting a sequential ramp on a nominal state is the "nominal category on a
+sequential colour ramp" anti-pattern that `perception.md` rejects. The analytical act in this table is
+not reading a cell, it is **permuting the rows until the pattern becomes a block** — Bertin's
+reorderable matrix.
+
+**Rules:**
+- Encode state with the **status palette** (good / warning / critical), never with a sequential ramp: the
+  values are nominal and a ramp asserts an order that does not exist — Munzner 2014; Wilke 2019
+- **Order the rows by pattern, never alphabetically**: grouping rows that behave alike makes the block
+  structure emerge on its own, and that emergence IS the finding; alphabetical order scatters it into
+  noise — Bertin, *Sémiologie graphique*, 1967 and *Graphics and Graphic Information Processing*, 1981
+  (the reorderable matrix); Behrisch et al., *Matrix Reordering Methods*, EuroVis STAR, 2016
+- Give each block a **group header naming the pattern** ("blocks in the US", "identical on both sides")
+  rather than leaving the reader to infer why those rows sit together — Few 2004; Knaflic 2015
+- **Grey for what conforms, colour only for the exception**: with hundreds of cells, painting every state
+  saturates the field and nothing stands out. This is "grey is the protagonist" applied inside a table,
+  and it is what lets a single deviant cell be found in a second — Knaflic, *Storytelling with Data*, 2015
+- The legend **maps colour to meaning**, not min to max: a status matrix has a key, not a scale — derived
+  from Cleveland & McGill 1984 (colour used as a nominal channel)
+- The **redundant channel beyond colour is the printed value itself**; an icon in every cell is
+  unaffordable at this density — WCAG 1.4.1 applied to the case
+- **The right-align rule does not apply to a grid of marks.** A cell holding a one or two digit code over
+  a fill is a mark, not a magnitude: there are no orders of magnitude to stack, and centring reads better.
+  Treat it as an explicit exemption from "Alignment and numeric typography" above — Few 2004, read in its
+  own scope
+
+**Anti-patterns:** A matrix in alphabetical order, which hides the very block it exists to show; a
+sequential ramp over nominal states; every cell painted, with no grey context, so nothing is highlighted;
+a min/max legend where there is no scale; a coloured cell with no value in it.
+
 ## Sorting: affordance and visible state
 Sorting is the #1 interaction of an interactive table, and it fails in two ways: the user doesn't discover that they can sort (missing affordance) or doesn't know how the table is currently sorted (invisible state). The header arrow is an indicator of CURRENT STATE, not a button for a future state — a classic confusion documented since 2007. The default order is also a design decision, not a database accident.
 
@@ -172,6 +208,8 @@ A total is an answer, not an ordinary row: it needs to stand out typographically
 - Cleveland & McGill, Graphical Perception, JASA, 1984
 - IBCS Standards 1.2, Hichert & Faisst, 2021
 - Lisa Charlotte Muth, What to consider when creating tables / heatmaps / sparklines, Datawrapper Blog/Academy, 2022
+- Jacques Bertin, *Sémiologie graphique*, 1967; *Graphics and Graphic Information Processing*, 1981 (the reorderable matrix)
+- Michael Behrisch et al., *Matrix Reordering Methods for Table and Network Visualization*, EuroVis STAR, 2016
 - Jessica Enders, Zebra Striping: Does it Really Help? / More Data for the Case, A List Apart, 2008
 - Nielsen Norman Group, Data Tables: Four Major User Tasks, 2022; Mobile Tables, 2019; Bulk Actions: 3 Design Guidelines
 - W3C WAI-ARIA Authoring Practices Guide (APG), Table pattern / Sortable Table Example; MDN Web Docs, aria-sort

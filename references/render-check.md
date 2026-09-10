@@ -36,7 +36,7 @@ The extension needs a site permission for the origin you are about to open; if a
 
 ## The probe
 
-`scripts/chart-probe.js` runs the mechanical half of the checklist in one call and returns a digest that fits the tool channel (which truncates around 1 KB).
+`scripts/chart-probe.js` runs the mechanical half of the checklist in one call and returns a digest that fits the tool channel (which truncates around 1 KB). It covers charts drawn in `<svg>` **and** charts drawn in HTML/CSS, plus the table rules that a rendered DOM can decide.
 
 Serve it next to the page, then:
 
@@ -59,6 +59,19 @@ What it decides:
 | `no-text-equivalent` | warn | §10, Chartability — svg with no `<title>`/`<desc>`/`aria-label` |
 | `scheme-ignored` | warn | the reader asked for dark or light and the page paints the other, with no `[data-theme]` in play |
 | `canvas-opaque-to-probe` | info | a `<canvas>` chart is pixels; none of the above was measured for it |
+| `contrast-text-html` | error | WCAG 1.4.3 for text written in HTML, not inside `<svg>`: a cell value, an axis label or a legend written as an element was never covered by `contrast-text` |
+| `contrast-mark-html` | warn | WCAG 1.4.11 for marks drawn in HTML/CSS (a `div` bar, a dot grid, a heat-map cell). Fill, `border` and `box-shadow` all count, whichever gives the strongest contrast |
+| `no-text-equivalent-html` | warn | §10, Chartability — an HTML/CSS chart group with no `figure`/`table`/`role`/`aria-label` wrapper. A mark that sits beside its own label (a legend) is exempt |
+| `mark-size-floored` | error | §15, lie factor — a mark rendered exactly at its `min-width`/`min-height`: the floor is clamping the encoding, so two different values draw the same length. Usually only binds at the narrow end, which is why it is a render-time check |
+| `html-chart-only` | info | the surface draws its charts in HTML/CSS, so the svg-only checks (`tick-collision`, `color-only-series`, svg text contrast) did not run |
+| `table-numeric-align` | error | `tables.md` (Few 2004; Wilke 2019) — a numeric column not right-aligned. A grid of one/two-digit codes with a fill is treated as a mark grid, not a column of magnitudes, and is exempt |
+| `table-tabular-nums` | warn | `tables.md` (Rutter 2017) — a numeric column without lining tabular figures, so digits do not stack |
+| `table-decimal-mixed` | warn | `tables.md` (Wilke 2019) — a column mixing decimal precision, which shifts the decimal point down the column |
+| `table-vertical-rules` | warn | `tables.md` (Wilke 2019; Rutter 2017) — vertical rules between columns; alignment already separates them |
+| `table-row-height` | warn | `tables.md` (Few 2004) — rows under 1.6x the text size, where adjacent rows fuse |
+| `numero-sem-comparacao` | warn | §6 — a hero number (≥24px) with no baseline in its own tile nor in the sibling tiles that share its shape. A trio of today/after/difference counts as the comparison; an unrelated number elsewhere on the page does not |
+| `sem-carimbo-de-data` | warn | §10 — a surface carrying numbers with no as-of date anywhere in it: a number with no reference date is neither trustworthy nor auditable |
+| `nao-verificado-aqui` | info | emitted on **every** run, including clean ones: names the half this probe cannot decide (§11 form, §12 encoding, §14 message, §4 consistency) so "no findings" is never read as "reviewed" |
 
 The digest is a summary. Drill into one check with `__chartReport.findings[N].samples`; the full report stays in `globalThis.__chartReport`.
 
