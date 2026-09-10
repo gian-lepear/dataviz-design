@@ -93,6 +93,30 @@
         </tbody></table>`,
     },
     {
+      nome: 'table where most rows repeat one value',
+      espera: ['mostly-one-value'],
+      html: `<p>2026-09-10</p><table><thead><tr><th>name</th><th>a</th><th>b</th></tr></thead><tbody>
+        ${'<tr><td>row</td><td style="text-align:right">10</td><td style="text-align:right">10</td></tr>'.repeat(16)}
+        <tr><td>odd</td><td style="text-align:right">3</td><td style="text-align:right">7</td></tr>
+        <tr><td>odd</td><td style="text-align:right">0</td><td style="text-align:right">9</td></tr>
+        </tbody></table>`,
+    },
+    {
+      nome: 'table whose rows actually differ',
+      proibe: ['mostly-one-value'],
+      html: `<p>2026-09-10</p><table><thead><tr><th>name</th><th>a</th><th>b</th></tr></thead><tbody>
+        ${Array.from({ length: 16 }, (_, i) => `<tr><td>row</td><td style="text-align:right">${i}</td>` +
+          `<td style="text-align:right">${(i * 3) % 11}</td></tr>`).join('')}
+        </tbody></table>`,
+    },
+    {
+      nome: 'unit chart where one class covers almost everything',
+      espera: ['mostly-one-value'],
+      html: `<p>2026-09-10</p><div style="background:#fff">${
+        '<i style="display:inline-block;width:12px;height:12px;background:#1a6b4a"></i>'.repeat(28)}${
+        '<i style="display:inline-block;width:12px;height:12px;background:#9c3f36"></i>'.repeat(2)}</div>`,
+    },
+    {
       nome: 'legend swatches sit beside their own labels',
       proibe: ['no-text-equivalent-html'],
       html: `<p>2026-09-10</p><div style="background:#fff">${

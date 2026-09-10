@@ -61,6 +61,11 @@ de `:hover`, `:focus` e `:active` no CSSOM. A célula de status carrega o texto 
 preenchimento, e uma regra de hover que trocava só o fundo derrubava o contraste de 6,3 para 1,1 nos
 dois temas. Nenhuma checagem via, porque todas mediam a página em repouso.
 
+Acrescentado depois, a partir de duas peças que o leitor achou pesadas e o probe não acusou:
+`mostly-one-value`, que mede a fração do módulo ocupada pelo padrão modal. Assina a linha pela
+informação que ela carrega, não pelo texto, senão "10 10 10 10" e "10 não usa 10 não usa" viram
+padrões diferentes e nenhum atinge o limiar. Acusou 75% na tabela e 84% na grade de pontos.
+
 **Conscientemente fora de alcance**, para não ficarem como pendência que nunca fecha:
 
 - `jargão sem explicação` (§10): a heurística seria sigla em caixa alta sem `abbr` ou `title`. Em
@@ -72,6 +77,14 @@ dois temas. Nenhuma checagem via, porque todas mediam a página em repouso.
 - `filtro sem feedback` (§1): exige interação, fora do alcance de um probe estático.
 - estado construído em JavaScript: o `contrast-in-state` cobre estado **declarado** em CSS. Cor
   aplicada por script, em resposta a evento, continua invisível para o probe.
+- `data because it exists` (§10): um módulo que repete o que outro já disse. O `mostly-one-value`
+  pega o caso denso, mas redundância entre dois módulos distintos exige entender o que cada um
+  afirma. Fica declarado no `not-checked-here`.
+
+**Lição de método**, que motivou ampliar a declaração: dos 17 anti-padrões do §10, o probe decide 7 e
+o `not-checked-here` declarava só 4. Cinco não estavam em lugar nenhum, e os dois primeiros da lista,
+"data eyeball attack" e "data because it exists", eram justamente esses. A declaração agora nomeia
+todos, porque o que não é medido precisa pelo menos ser dito.
 
 Enquanto isso, a execução emite `not-checked-here` em toda rodada, listando o que continua sendo
 julgamento humano. Isso existe porque uma execução limpa foi confundida com revisão feita.

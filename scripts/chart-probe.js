@@ -466,6 +466,42 @@
       `background or colour and leaves the other, so the text disappears while the pointer is on it`,
       [...new Set(hoverRuim)]);
 
+    // 13. SKILL.md section 10, "data eyeball attack" and section 1, overview first. When most of a
+    // module carries the same value, the repetition is what the reader scrolls through to reach the
+    // few rows that differ. Decidable: the modal signature's share of the module.
+    const monotono = [];
+    const modal = (assinaturas) => {
+      const conta = new Map();
+      for (const a of assinaturas) conta.set(a, (conta.get(a) || 0) + 1);
+      let melhor = 0;
+      for (const n of conta.values()) melhor = Math.max(melhor, n);
+      return melhor / assinaturas.length;
+    };
+    for (const t of tabelas) {
+      const linhas = [...t.querySelectorAll('tbody tr')].filter(visible)
+        .filter((r) => r.cells.length > 1);
+      if (linhas.length < 12) continue;
+      // Assina pela informação da linha, não pelo texto: "10 10 10 10" e "10 n/a 10 n/a" dizem a
+      // mesma coisa, e assinar pelo texto as separa em dois padrões que nunca atingem o limiar.
+      const assin = linhas.map((r) => [...new Set([...r.cells].slice(1)
+        .map((c) => c.textContent.trim())
+        .filter((t) => /^\d+$/.test(t)))].sort().join(','));
+      const parte = modal(assin);
+      if (parte >= 0.7) monotono.push(path(t) + ' ' + Math.round(parte * 100) + '% of ' +
+        linhas.length + ' rows repeat one value pattern');
+    }
+    for (const g of htmlGroups) {
+      if (g.els.length < 20) continue;
+      const assin = g.els.map((el) => cs(el).backgroundColor + '|' + cs(el).borderTopColor);
+      const parte = modal(assin);
+      if (parte >= 0.75) monotono.push(g.key + ' ' + Math.round(parte * 100) + '% of ' +
+        g.els.length + ' marks are the same');
+    }
+    if (monotono.length) add('mostly-one-value', 'warn',
+      `${monotono.length} module(s) where most of the ink repeats one value: the reader scrolls past ` +
+      `the repetition to reach the few that differ. Show what differs and put the rest behind an ` +
+      `on-demand disclosure (SKILL.md section 1, overview first; section 10, data eyeball attack)`, monotono);
+
     // A clean run is not a review. State the half this probe cannot decide, so "no findings"
     // is never mistaken for "the chart was reviewed" (SKILL.md sections 11-15).
     add('not-checked-here', 'info',
