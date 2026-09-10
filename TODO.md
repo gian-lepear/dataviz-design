@@ -79,19 +79,20 @@ Cruzamento automatizado em `scripts/check-docs-sync.js`, que falha se um lado ti
 tem. E `scripts/self-test.js` cobre o probe com 13 casos, cada um um bug que ele já teve; verificado
 que a suíte falha quando o bug é reintroduzido, senão seria decoração.
 
-## 4. SKILL.md: o §11 é pulável na prática
+## 4. ~~SKILL.md: o §11 é pulável na prática~~ FEITO
 
 O fluxo de revisão tem uma metade mecânica com saída objetiva (o probe) e uma metade de julgamento
 (§11 a §15). Na prática a primeira sequestra a atenção e a segunda é pulada, porque uma devolve
 `LIMPO` e a outra exige ler `chart-choice.md`. Foi assim que uma barra empilhada passou por revisão
 com a mensagem no segmento que flutua, e quem pegou foi o leitor, não a skill.
 
-Ideia: exigir o §11 **antes** do render check, com uma frase única obrigatória no formato "a relação
-é X, logo a forma é Y", escrita antes de qualquer medição. Assim a escolha da forma fica registrada e
-revisável, em vez de implícita.
+A seção Usage passou a exigir o §11 **primeiro e por escrito**, uma frase por gráfico no formato "a
+relação é X, logo a forma é Y", antes de qualquer medição. O render check foi movido para o
+fechamento, com a razão explícita: ele responde rápido e por isso sequestra a revisão quando vem
+primeiro, e um probe sem achados não disse nada sobre a forma estar certa.
 
-Mitigação já no lugar: `not-checked-here` aparece em toda execução, inclusive nas limpas, nomeando o
-que o probe não decide. Não substitui a mudança de ordem, só impede que o silêncio pareça aprovação.
+Reforço: `not-checked-here` aparece em toda execução, inclusive nas limpas, nomeando o que o probe
+não decide.
 
 ## 5. §3 contra §0.3: resolvido, o §3 vale
 
@@ -100,5 +101,10 @@ Levantado que o §0.3 classifica a tela em reporting, monitoring, exploring ou f
 clicar seria correto.
 
 **Decisão: o §3 é a regra, superfície de dado tem que ser interativa.** Sem isenção por tipo de tela.
-Consequência prática: relatório com grade de pontos e matriz que não levam a lugar nenhum está em
-débito com o §3, e o caminho é dar drill, não relaxar a regra.
+
+Dívida paga no relatório que originou este TODO: cada quadrado da grade leva à linha do endpoint na
+tabela e abre o detalhe; cada linha da matriz abre as 10 tentativas de cada cenário, com código de
+resposta e mediana; cada serviço do gráfico de custo abre a tarifa nas duas regiões; a linha de
+latência abre a mediana de cada rodada. Tudo por clique e por teclado, com `aria-expanded`. O probe
+mede 116 de 123 marcas clicáveis, e as 7 restantes são quadradinhos de legenda, que são chave e não
+dado.

@@ -249,11 +249,18 @@ solved end to end) — read it when you want to see the principles applied toget
 
 ## Usage
 
-When designing/reviewing any data surface: walk 0→10 in order (section 3 is a hard acceptance
-rule); when designing/reviewing a specific CHART, also go through 11→15
-(11 chooses the form, 12 validates the encoding, 13 cleans up, 14 gives the message, 15 audits the
-honesty). When the work goes deep on a topic, **read the matrix file (§16)** before
-deciding — that's where the thresholds and trade-offs are. In review, list violations with file:line
-and the fix. When the surface runs somewhere, close with the render check (§16, `render-check.md`) instead of
-asserting the result: a chart that was never rendered has not been reviewed, and saying so is part of the review. Combine with `frontend-design` for visual identity and, when the project has one,
+**Start with §11, in writing, before measuring anything.** For each chart, commit to one sentence in
+the form *"the relationship is X, so the form is Y"* — magnitude → bar from zero, change between two
+points with the levels mattering → dumbbell, part-to-whole → stacked bar, and so on (§11, and
+`references/chart-choice.md` for the thresholds). Write it down; an unwritten choice of form is not
+reviewable, and it is the one that gets skipped. The render check answers the mechanical half and
+returns quickly, which is exactly why it hijacks the review when it goes first: a probe reporting no
+findings has said nothing about whether the form was right.
+
+Then walk 0→10 in order (section 3 is a hard acceptance rule) and, for a specific CHART, 12→15
+(12 validates the encoding, 13 cleans up, 14 gives the message, 15 audits the honesty). When the work
+goes deep on a topic, **read the matrix file (§16)** before deciding — that's where the thresholds and
+trade-offs are. In review, list violations with file:line and the fix. Close with the render check
+(§16, `render-check.md`) instead of asserting the result: a chart that was never rendered has not been
+reviewed, and saying so is part of the review. Combine with `frontend-design` for visual identity and, when the project has one,
 with the product's own theme/component macros.
